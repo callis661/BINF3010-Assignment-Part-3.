@@ -19,6 +19,22 @@ def jukes_cantor(reference_sequence: str, distant_sequence: str) -> float:
         For example 1.163.
 
     """
+    valid = set("ACGTU")
+    pairs = [(a, b) for a, b in zip(reference_sequence.upper(), distant_sequence.upper())
+             if a in valid and b in valid]
+    length = len(pairs)
+    if length == 0:
+        return 0.0
+    mismatches = sum(1 for a, b in pairs if a != b)
+    if mismatches == 0:
+        return 0.0
+    p = mismatches / length
+    arg = 1 - 4 / 3 * p
+    if arg <= 0:
+        return float("inf")
+    d = -0.75 * math.log(arg)       # substitutions per site
+    return d * length               # same unit as uncorrected distance (per genome)
+
     raise NotImplementedError()
 
 
